@@ -1,10 +1,10 @@
-import visa,time,string
-import random
+import pyvisa as visa
 
 
 class device:
     def __init__(self,add="GPIB0::14"):
-        self.device=visa.instrument(add)
+        self.__ressourceManager=visa.ResourceManager()
+        self.device=self.__ressourceManager.open_resource(add)
         self.tauset={
                 0 : "10mus",
                 1 : "30mus",
@@ -75,33 +75,33 @@ class device:
         
     #get settings
     def get_tau(self):
-        return self.device.ask('OFLT?')   
+        return self.device.query('OFLT?')   
     def get_sens(self):
-        return self.device.ask('SENS?')   
+        return self.device.query('SENS?')   
     def get_trigsource(self):
-        return self.device.ask('FMOD?')
+        return self.device.query('FMOD?')
     def get_trigshape(self):
-        return self.device.ask('RSLP?')
+        return self.device.query('RSLP?')
     def get_harm(self):
-        return self.device.ask('HARM?')
+        return self.device.query('HARM?')
     def get_input(self):
-        return self.device.ask('ISRC?')
+        return self.device.query('ISRC?')
     def get_ground(self):
-        return self.device.ask('IGND?')
+        return self.device.query('IGND?')
     def get_couple(self):
-        return self.device.ask('ICPL?')
+        return self.device.query('ICPL?')
     def get_filter(self):
-        return self.device.ask('ILIN?')
+        return self.device.query('ILIN?')
     def get_reserve(self):
-        return self.device.ask('RMOD?')
+        return self.device.query('RMOD?')
     def get_slope(self):
-        return self.device.ask('OFSL?')
+        return self.device.query('OFSL?')
     def get_sync(self):
-        return self.device.ask('SYNC?')
+        return self.device.query('SYNC?')
     def get_disp_rat(self,channel):
-        return self.device.ask('DDEF? %i' % channel)
+        return self.device.query('DDEF? %i' % channel)
     def get_exp_off(self,channel):
-        return self.device.ask('OEXP? %i' % channel)
+        return self.device.query('OEXP? %i' % channel)
 
 
 
@@ -147,34 +147,32 @@ class device:
         
     #get data    
     def get_all(self):
-        return self.device.ask("SNAP?1,2,3,4")
+        return self.device.query("SNAP?1,2,3,4")
     def get_X(self):
-        return float(self.device.ask('OUTP? 1'))
+        return float(self.device.query('OUTP? 1'))
     def get_Y(self):
-        return float(self.device.ask('OUTP? 2'))
+        return float(self.device.query('OUTP? 2'))
     def get_R(self):
-        return float(self.device.ask('OUTP? 3'))
+        return float(self.device.query('OUTP? 3'))
     def get_Theta(self):
-        return float(self.device.ask('OUTP? 4'))
+        return float(self.device.query('OUTP? 4'))
     def get_freq(self):
-        return float(self.device.ask('FREQ?'))   
+        return float(self.device.query('FREQ?'))   
     def get_ampl(self):
-        return float(self.device.ask('SLVL?'))        
+        return float(self.device.query('SLVL?'))        
     def get_phase(self):
-        return float(self.device.ask('PHAS?'))
-    def get_harm(self):
-        return float(self.device.ask('HARM?'))
+        return float(self.device.query('PHAS?'))
     def get_oaux(self,value):
-        return float(self.device.ask('OAUX? %i' %value))
+        return float(self.device.query('OAUX? %i' %value))
     def read_aux(self,output):
-        return float(self.device.ask('AUXV? %i' %output))
+        return float(self.device.query('AUXV? %i' %output))
 
         
         
  
               
 if (__name__ == '__main__'):
-    add="GPIB0::14"
+    add="GPIB0::8"
     lockin=device(add)
     #f = open('test.dat','wb');
     data=lockin.get_all()
