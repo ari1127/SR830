@@ -60,9 +60,9 @@ class device:
     def clear(self):
         self.device.write('*CLS')
     def disable_front_panel(self):
-        self.device.write('OVRM 1')
-    def enable_front_panel(self):
         self.device.write('OVRM 0')
+    def enable_front_panel(self):
+        self.device.write('OVRM 1')
     def auto_phase(self):
         self.device.write('APHS')
     def auto_gain(self):
