@@ -5,6 +5,9 @@ class device:
     def __init__(self,add="GPIB0::14"):
         self.__ressourceManager=visa.ResourceManager()
         self.device=self.__ressourceManager.open_resource(add)
+        # use the right termination characters, defaults don't work correctly
+        self.device.read_termination='\n'
+        self.device.write_termination='\n'
         self.tauset={
                 0 : "10mus",
                 1 : "30mus",
@@ -54,7 +57,7 @@ class device:
                 24 : "200mV",
                 25 : "500mV",
                 26 : "1V"}
-            
+    
     def reset(self):
         self.device.write('*RST')
     def clear(self):
@@ -75,9 +78,9 @@ class device:
         
     #get settings
     def get_tau(self):
-        return self.device.query('OFLT?')   
+        return self.device.query('OFLT?')
     def get_sens(self):
-        return self.device.query('SENS?')   
+        return self.device.query('SENS?')
     def get_trigsource(self):
         return self.device.query('FMOD?')
     def get_trigshape(self):
