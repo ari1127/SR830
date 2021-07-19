@@ -4,7 +4,8 @@ Created on Tue Oct 07 10:39:34 2014
 
 @author: afeldman
 """
-import sys,os,thread,time
+#import sys,os,thread,time
+import sys
 import numpy as np
 from PyQt4 import QtCore, QtGui
 from parse import *
@@ -54,16 +55,16 @@ class SR830dialog(QtGui.QDialog, SR830gui.Ui_Dialog):
         self.getsettings()
 
         self.startmeas()
-    
+        
     def startmeas(self):
-		if not self.running :
-			self.timer.start(200)
-			self.running  = True
-		else:
-			self.timer.stop()
-			self.running  = False
-
-		print 'Measuring....'    
+        if not self.running :
+            self.timer.start(200)
+            self.running  = True
+        else:
+            self.timer.stop()
+            self.running  = False
+    
+    print('Measuring....')
 
     def getsettings(self):
         self.settings.sens=lockin.get_sens()
@@ -157,7 +158,7 @@ class SR830dialog(QtGui.QDialog, SR830gui.Ui_Dialog):
                     newtau=i
                     lockin.set_tau(newtau)
         else:
-            print "not in set"
+            print("not in set")
     def chgsens(self):
         tempsens=str(self.sensval.currentText())+str(self.sensunit.currentText())
         if tempsens in self.settings.sensset.values():
@@ -166,7 +167,7 @@ class SR830dialog(QtGui.QDialog, SR830gui.Ui_Dialog):
                     newsens=i
                     lockin.set_sens(newsens)
         else:
-            print "not in set"
+            print("not in set")
     def chgres(self):
         lockin.set_reserve(self.reserveset.currentIndex())
     def chgslope(self):
