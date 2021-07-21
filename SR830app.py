@@ -4,12 +4,12 @@ Created on Tue Oct 07 10:39:34 2014
 
 @author: afeldman
 """
-#import sys,os,thread,time
-import sys
-from PyQt5 import QtWidgets, Qtcore
+
+from PyQt5 import QtWidgets,  QtCore
 
 import wid_Display_SR830 as wid_SR830
 import SR830
+from parse import parse
 
 add = "GPIB0::8"  # our lockin's defaults
 lockin = SR830.device(add)
@@ -64,7 +64,7 @@ class SR830_widget(QtWidgets.QWidget):
             self.timer.stop()
             self.running = False
 
-    print('Measuring....')
+        print('Measuring....')
 
     def getsettings(self):
         self.settings.sens = lockin.get_sens()
