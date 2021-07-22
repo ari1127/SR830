@@ -5,6 +5,7 @@ Created on Tue Oct 07 10:39:34 2014
 @author: afeldman
 """
 
+import sys
 from PyQt5 import QtWidgets,  QtCore
 
 import wid_Display_SR830 as wid_SR830
@@ -14,27 +15,33 @@ from parse import parse
 add = "GPIB0::8"  # our lockin's defaults
 lockin = SR830.device(add)
 
+# Create Qt application
+# checks if QApplication already exists
+app = QtWidgets.QApplication.instance()
+if not app:                             # create QApplication if it doesnt exist
+    app = QtWidgets.QApplication(sys.argv)
+
 
 def update():
-    myapp.data.x.append(lockin.get_X())
-    myapp.data.y.append(lockin.get_Y())
+    w.data.x.append(lockin.get_X())
+    w.data.y.append(lockin.get_Y())
 
-    myapp.Channel1.display('{:.2E}'.format(myapp.data.x[-1]))
-    myapp.Channel2.display('{:.2E}'.format(myapp.data.y[-1]))
+    w.IHM.Channel1.display('{:.2E}'.format(w.data.x[-1]))
+    w.IHM.Channel2.display('{:.2E}'.format(w.data.y[-1]))
 
-    refsel = myapp.reference.currentIndex()
+    refsel = w.IHM.reference.currentIndex()
     if refsel == 0:
-        myapp.data.phase.append(lockin.get_phase())
-        myapp.Ref.display('{:.2f}'.format(myapp.data.phase[-1]))
+        w.data.phase.append(lockin.get_phase())
+        w.IHM.Ref.display('{:.2f}'.format(w.data.phase[-1]))
     elif refsel == 1:
-        myapp.data.freq.append(lockin.get_freq())
-        myapp.Ref.display('{:.2f}'.format(myapp.data.freq[-1]))
+        w.data.freq.append(lockin.get_freq())
+        w.IHM.Ref.display('{:.2f}'.format(w.data.freq[-1]))
     elif refsel == 2:
-        myapp.data.ampl.append(lockin.get_ampl())
-        myapp.Ref.display('{:.2f}'.format(myapp.data.ampl[-1]))
+        w.data.ampl.append(lockin.get_ampl())
+        w.IHM.Ref.display('{:.2f}'.format(w.data.ampl[-1]))
     elif refsel == 3:
-        myapp.data.harm.append(lockin.get_harm())
-        myapp.Ref.display('{:.2f}'.format(myapp.data.harm[-1]))
+        w.data.harm.append(float(lockin.get_harm())) #belle consistence dans les fonctions 
+        w.IHM.Ref.display('{:.2f}'.format(w.data.harm[-1]))
 
 
 class SR830_widget(QtWidgets.QWidget):
@@ -55,6 +62,9 @@ class SR830_widget(QtWidgets.QWidget):
         self.getsettings()
 
         self.startmeas()
+
+    def show_window(self):
+        self.show()
 
     def startmeas(self):
         if not self.running:
@@ -94,29 +104,30 @@ class SR830_widget(QtWidgets.QWidget):
         # set GUI to match settings
         senstext = self.settings.sensset.get(int(self.settings.sens))
         sensval, sensunit = parse('{:d}{}', senstext)
-        self.sensunit.setCurrentIndex(self.sensunit.findText(sensunit))
-        self.sensval.setCurrentIndex(self.sensval.findText(str(sensval)))
+        self.IHM.sensunit.setCurrentIndex(self.IHM.sensunit.findText(sensunit))
+        self.IHM.sensval.setCurrentIndex(
+            self.IHM.sensval.findText(str(sensval)))
         tautext = self.settings.tauset.get(int(self.settings.tau))
         tauval, tauunit = parse('{:d}{}', tautext)
-        self.tauunit.setCurrentIndex(self.tauunit.findText(tauunit))
-        self.tauval.setCurrentIndex(self.tauval.findText(str(tauval)))
-        self.slopeval.setCurrentIndex(int(self.settings.slope))
-        self.synccheck.setCheckState(int(self.settings.sync)*2)
-        self.input.setCurrentIndex(int(self.settings.input))
-        self.coupling.setCurrentIndex(int(self.settings.couple))
-        self.ground.setCurrentIndex(int(self.settings.ground))
-        self.filterset.setCurrentIndex(int(self.settings.filter))
-        self.reserveset.setCurrentIndex(int(self.settings.reserve))
-        self.ch1_disp.setCurrentIndex(int(self.settings.ch1disp))
-        self.ch1_ratio.setCurrentIndex(int(self.settings.ch1ratio))
-        self.ch1_offset.setCurrentIndex(int(self.settings.ch1offset))
-        self.ch1_expand.setCurrentIndex(int(self.settings.ch1expand))
-        self.ch2_disp.setCurrentIndex(int(self.settings.ch2disp))
-        self.ch2_ratio.setCurrentIndex(int(self.settings.ch2ratio))
-        self.ch2_offset.setCurrentIndex(int(self.settings.ch2offset))
-        self.ch2_expand.setCurrentIndex(int(self.settings.ch2expand))
-        self.trigshape.setCurrentIndex(int(self.settings.trigshape))
-        self.trigsource.setCurrentIndex(int(self.settings.trigsource))
+        self.IHM.tauunit.setCurrentIndex(self.IHM.tauunit.findText(tauunit))
+        self.IHM.tauval.setCurrentIndex(self.IHM.tauval.findText(str(tauval)))
+        self.IHM.slopeval.setCurrentIndex(int(self.settings.slope))
+        self.IHM.synccheck.setCheckState(int(self.settings.sync)*2)
+        self.IHM.input.setCurrentIndex(int(self.settings.input))
+        self.IHM.coupling.setCurrentIndex(int(self.settings.couple))
+        self.IHM.ground.setCurrentIndex(int(self.settings.ground))
+        self.IHM.filterset.setCurrentIndex(int(self.settings.filter))
+        self.IHM.reserveset.setCurrentIndex(int(self.settings.reserve))
+        self.IHM.ch1_disp.setCurrentIndex(int(self.settings.ch1disp))
+        self.IHM.ch1_ratio.setCurrentIndex(int(self.settings.ch1ratio))
+        self.IHM.ch1_offset.setCurrentIndex(int(self.settings.ch1offset))
+        self.IHM.ch1_expand.setCurrentIndex(int(self.settings.ch1expand))
+        self.IHM.ch2_disp.setCurrentIndex(int(self.settings.ch2disp))
+        self.IHM.ch2_ratio.setCurrentIndex(int(self.settings.ch2ratio))
+        self.IHM.ch2_offset.setCurrentIndex(int(self.settings.ch2offset))
+        self.IHM.ch2_expand.setCurrentIndex(int(self.settings.ch2expand))
+        self.IHM.trigshape.setCurrentIndex(int(self.settings.trigshape))
+        self.IHM.trigsource.setCurrentIndex(int(self.settings.trigsource))
 
     def autophase(self):
         if self.running:
@@ -141,7 +152,7 @@ class SR830_widget(QtWidgets.QWidget):
 
     def setRef(self):
         curval = float(self.newrefval.text())
-        refsel = myapp.reference.currentIndex()
+        refsel = app.reference.currentIndex()
         if refsel == 0:
             lockin.set_phase(curval)
         elif refsel == 1:
@@ -333,7 +344,9 @@ class SRsettings:
             26: "1V"}
 
 
-myapp = SR830dialog()
+w = SR830_widget()
+w.show_window()
 
-myapp.show()
+QtWidgets.QApplication.setQuitOnLastWindowClosed(True)
 app.exec_()
+app.quit()
