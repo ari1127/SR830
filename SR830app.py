@@ -26,22 +26,22 @@ def update():
     w.data.x.append(lockin.get_X())
     w.data.y.append(lockin.get_Y())
 
-    w.IHM.Channel1.display('{:.2E}'.format(w.data.x[-1]))
-    w.IHM.Channel2.display('{:.2E}'.format(w.data.y[-1]))
+    w.gui.Channel1.display('{:.2E}'.format(w.data.x[-1]))
+    w.gui.Channel2.display('{:.2E}'.format(w.data.y[-1]))
 
-    refsel = w.IHM.reference.currentIndex()
+    refsel = w.gui.reference.currentIndex()
     if refsel == 0:
         w.data.phase.append(lockin.get_phase())
-        w.IHM.Ref.display('{:.2f}'.format(w.data.phase[-1]))
+        w.gui.Ref.display('{:.2f}'.format(w.data.phase[-1]))
     elif refsel == 1:
         w.data.freq.append(lockin.get_freq())
-        w.IHM.Ref.display('{:.2f}'.format(w.data.freq[-1]))
+        w.gui.Ref.display('{:.2f}'.format(w.data.freq[-1]))
     elif refsel == 2:
         w.data.ampl.append(lockin.get_ampl())
-        w.IHM.Ref.display('{:.2f}'.format(w.data.ampl[-1]))
+        w.gui.Ref.display('{:.2f}'.format(w.data.ampl[-1]))
     elif refsel == 3:
         w.data.harm.append(float(lockin.get_harm())) #belle consistence dans les fonctions 
-        w.IHM.Ref.display('{:.2f}'.format(w.data.harm[-1]))
+        w.gui.Ref.display('{:.2f}'.format(w.data.harm[-1]))
 
 
 class SR830_widget(QtWidgets.QWidget):
@@ -49,8 +49,8 @@ class SR830_widget(QtWidgets.QWidget):
 
     def __init__(self):
         super().__init__()
-        self.IHM = wid_SR830.Ui_Form()
-        self.IHM.setupUi(self)
+        self.gui = wid_SR830.Ui_Form()
+        self.gui.setupUi(self)
         self.running = False
 
         self.timer = QtCore.QTimer()
@@ -104,30 +104,30 @@ class SR830_widget(QtWidgets.QWidget):
         # set GUI to match settings
         senstext = self.settings.sensset.get(int(self.settings.sens))
         sensval, sensunit = parse('{:d}{}', senstext)
-        self.IHM.sensunit.setCurrentIndex(self.IHM.sensunit.findText(sensunit))
-        self.IHM.sensval.setCurrentIndex(
-            self.IHM.sensval.findText(str(sensval)))
+        self.gui.sensunit.setCurrentIndex(self.gui.sensunit.findText(sensunit))
+        self.gui.sensval.setCurrentIndex(
+            self.gui.sensval.findText(str(sensval)))
         tautext = self.settings.tauset.get(int(self.settings.tau))
         tauval, tauunit = parse('{:d}{}', tautext)
-        self.IHM.tauunit.setCurrentIndex(self.IHM.tauunit.findText(tauunit))
-        self.IHM.tauval.setCurrentIndex(self.IHM.tauval.findText(str(tauval)))
-        self.IHM.slopeval.setCurrentIndex(int(self.settings.slope))
-        self.IHM.synccheck.setCheckState(int(self.settings.sync)*2)
-        self.IHM.input.setCurrentIndex(int(self.settings.input))
-        self.IHM.coupling.setCurrentIndex(int(self.settings.couple))
-        self.IHM.ground.setCurrentIndex(int(self.settings.ground))
-        self.IHM.filterset.setCurrentIndex(int(self.settings.filter))
-        self.IHM.reserveset.setCurrentIndex(int(self.settings.reserve))
-        self.IHM.ch1_disp.setCurrentIndex(int(self.settings.ch1disp))
-        self.IHM.ch1_ratio.setCurrentIndex(int(self.settings.ch1ratio))
-        self.IHM.ch1_offset.setCurrentIndex(int(self.settings.ch1offset))
-        self.IHM.ch1_expand.setCurrentIndex(int(self.settings.ch1expand))
-        self.IHM.ch2_disp.setCurrentIndex(int(self.settings.ch2disp))
-        self.IHM.ch2_ratio.setCurrentIndex(int(self.settings.ch2ratio))
-        self.IHM.ch2_offset.setCurrentIndex(int(self.settings.ch2offset))
-        self.IHM.ch2_expand.setCurrentIndex(int(self.settings.ch2expand))
-        self.IHM.trigshape.setCurrentIndex(int(self.settings.trigshape))
-        self.IHM.trigsource.setCurrentIndex(int(self.settings.trigsource))
+        self.gui.tauunit.setCurrentIndex(self.gui.tauunit.findText(tauunit))
+        self.gui.tauval.setCurrentIndex(self.gui.tauval.findText(str(tauval)))
+        self.gui.slopeval.setCurrentIndex(int(self.settings.slope))
+        self.gui.synccheck.setCheckState(int(self.settings.sync)*2)
+        self.gui.input.setCurrentIndex(int(self.settings.input))
+        self.gui.coupling.setCurrentIndex(int(self.settings.couple))
+        self.gui.ground.setCurrentIndex(int(self.settings.ground))
+        self.gui.filterset.setCurrentIndex(int(self.settings.filter))
+        self.gui.reserveset.setCurrentIndex(int(self.settings.reserve))
+        self.gui.ch1_disp.setCurrentIndex(int(self.settings.ch1disp))
+        self.gui.ch1_ratio.setCurrentIndex(int(self.settings.ch1ratio))
+        self.gui.ch1_offset.setCurrentIndex(int(self.settings.ch1offset))
+        self.gui.ch1_expand.setCurrentIndex(int(self.settings.ch1expand))
+        self.gui.ch2_disp.setCurrentIndex(int(self.settings.ch2disp))
+        self.gui.ch2_ratio.setCurrentIndex(int(self.settings.ch2ratio))
+        self.gui.ch2_offset.setCurrentIndex(int(self.settings.ch2offset))
+        self.gui.ch2_expand.setCurrentIndex(int(self.settings.ch2expand))
+        self.gui.trigshape.setCurrentIndex(int(self.settings.trigshape))
+        self.gui.trigsource.setCurrentIndex(int(self.settings.trigsource))
 
     def autophase(self):
         if self.running:
